@@ -1,23 +1,43 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class LevelController : MonoBehaviour
 {
     public Camera Maincamera;
     public GameObject PlayerObject;
 
-    ElementAdjustment Adjustments;
-    Movement PlayerMoveSchema;
+    Movement PlayerMoveController;
+
+    public List<GameObject> ListOfLevelObjects = new List<GameObject>();
 
     private void Start()
     {
-        PlayerMoveSchema = PlayerObject.GetComponent<Movement>();
+        PlayerMoveController = PlayerObject.GetComponent<Movement>();
+        SetUpNewElements(ListOfLevelObjects[0].GetComponent<ElementAdjustment>(), ListOfLevelObjects[0].GetComponent<Movement_Func>());
+        StartCoroutine(Test());
     }
-
-    private void GetNewElements(ElementAdjustment e, Movement_Func m)
+    
+    private void SetUpNewElements(ElementAdjustment e, Movement_Func m)
     {
         e.AdjustElements(Maincamera);
-        PlayerMoveSchema.changeMovementType(m);
+        PlayerMoveController.changeMovementType(m);
+    }
+    private void SetUpNewElements(ElementAdjustment e)
+    {
+        e.AdjustElements(Maincamera);
+    }
+    private void SetUpNewElements(Movement_Func m)
+    {
+        PlayerMoveController.changeMovementType(m);
+    }
+
+    
+
+    IEnumerator Test()
+    {
+        yield return new WaitForSeconds(10.0f);
+        SetUpNewElements(ListOfLevelObjects[1].GetComponent<ElementAdjustment>(), ListOfLevelObjects[1].GetComponent<Movement_Func>());
     }
 
 }

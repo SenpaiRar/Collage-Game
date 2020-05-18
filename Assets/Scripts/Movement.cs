@@ -10,11 +10,6 @@ public class Movement : MonoBehaviour
     Movement_Func move;
     public float Speed;
 
-    void Start()
-    {
-        move = GameObject.Find("LevelObject").GetComponent<Movement_Func>();   
-    }
-
     void Update()
     {
         move.MoveFunction(Speed, controller);
