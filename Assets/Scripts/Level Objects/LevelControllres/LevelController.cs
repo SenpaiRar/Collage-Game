@@ -6,6 +6,22 @@ public class LevelController : MonoBehaviour
 {
     public Camera Maincamera;
     public GameObject PlayerObject;
+    public GameObject FirstLevel;
+    
+    private GameObject currentLevel;
+    public GameObject CurrentLevel
+    {
+        get
+        {
+            return currentLevel;
+        }
+        set
+        {
+            Debug.Log("Level has Changed!");
+            currentLevel = value;
+            SetUpNewElements(value.GetComponent<ElementAdjustment>(), value.GetComponent<Movement_Func>(), value.GetComponent<LevelElementAdjustor>());
+        }
+    }
 
     Movement PlayerMoveController;
 
@@ -14,30 +30,40 @@ public class LevelController : MonoBehaviour
     private void Start()
     {
         PlayerMoveController = PlayerObject.GetComponent<Movement>();
-        SetUpNewElements(ListOfLevelObjects[0].GetComponent<ElementAdjustment>(), ListOfLevelObjects[0].GetComponent<Movement_Func>());
-        StartCoroutine(Test());
+        CurrentLevel = FirstLevel;
+        
     }
-    
-    private void SetUpNewElements(ElementAdjustment e, Movement_Func m)
+
+    /// <summary>
+    /// Takes in changes to level elements and control schemas and applies them.
+    /// </summary>
+    public void SetUpNewElements(ElementAdjustment e, Movement_Func m, LevelElementAdjustor l)
+    {
+        l.SetupLevel();
+        e.AdjustElements(Maincamera);
+        PlayerMoveController.changeMovementType(m);
+    }
+    public void SetUpNewElements(ElementAdjustment e, Movement_Func m)
     {
         e.AdjustElements(Maincamera);
         PlayerMoveController.changeMovementType(m);
     }
-    private void SetUpNewElements(ElementAdjustment e)
+    public void SetUpNewElements(ElementAdjustment e)
     {
         e.AdjustElements(Maincamera);
     }
-    private void SetUpNewElements(Movement_Func m)
+    public void SetUpNewElements(Movement_Func m)
     {
         PlayerMoveController.changeMovementType(m);
     }
-
-    
-
-    IEnumerator Test()
+    /// <summary>
+    /// Picks and assigns a random Element and movement pair.
+    /// </summary>
+    public void PickRandomLevel()
     {
-        yield return new WaitForSeconds(10.0f);
-        SetUpNewElements(ListOfLevelObjects[1].GetComponent<ElementAdjustment>(), ListOfLevelObjects[1].GetComponent<Movement_Func>());
+        int rand = Random.Range(0, ListOfLevelObjects.Count);
+        CurrentLevel = ListOfLevelObjects[rand];
     }
+    
 
 }

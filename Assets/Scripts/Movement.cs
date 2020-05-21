@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 
+/// <summary>
+/// Movement controller in charge of changing player's transform.
+/// </summary>
 public class Movement : MonoBehaviour
 {
     
